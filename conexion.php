@@ -1,153 +1,60 @@
+
 <?php
 
-if ($_SERVER["REQUEST_METHOD"] !== "POST") {
-    exit("Debes enviar el formulario desde la página principal.");
-}
+$Producto1 = $_POST['Producto1'] ?? '';
+$Precio1 = $_POST['Precio1'] ?? 0;
 
-$producto1 = trim($_POST["producto1"] ?? "");
-$producto2 = trim($_POST["producto2"] ?? "");
-$producto3 = trim($_POST["producto3"] ?? "");
+$Producto2 = $_POST['Producto2'] ?? '';
+$Precio2 = $_POST['Precio2'] ?? 0;
 
-$precio1 = $_POST["precio1"] ?? "";
-$precio2 = $_POST["precio2"] ?? "";
-$precio3 = $_POST["precio3"] ?? "";
+$Producto3 = $_POST['Producto3'] ?? '';
+$Precio3 = $_POST['Precio3'] ?? 0;
 
-if (
-    $producto1 === "" || $producto2 === "" || $producto3 === "" ||
-    !is_numeric($precio1) ||
-    !is_numeric($precio2) ||
-    !is_numeric($precio3) ||
-    $precio1 < 0 || $precio2 < 0 || $precio3 < 0
-) {
-    exit("Verifica los nombres y los precios ingresados.");
-}
+// Convertir los precios a números
+$Precio1 = (float) $Precio1;
+$Precio2 = (float) $Precio2;
+$Precio3 = (float) $Precio3;
 
-$precio1 = (float) $precio1;
-$precio2 = (float) $precio2;
-$precio3 = (float) $precio3;
-
-// Sumar los tres precios
-$subtotal = $precio1 + $precio2 + $precio3;
+// Sumar los precios
+$Suma = $Precio1 + $Precio2 + $Precio3;
 
 // Calcular el descuento del 16 %
-$descuento = $subtotal * 0.16;
+$Descuento = $Suma * 0.16;
 
 // Calcular el total a pagar
-$total = $subtotal - $descuento;
+$Total = $Suma - $Descuento;
 
-// Función para mostrar los valores en pesos colombianos
-function pesos($valor) {
-    return "$" . number_format($valor, 2, ",", ".");
-}
+echo "<h1>Información de los productos</h1>";
 
-// Evitar que los nombres ingresados se interpreten como HTML
-function seguro($texto) {
-    return htmlspecialchars(
-        $texto,
-        ENT_QUOTES,
-        "UTF-8"
-    );
-}
+echo "El nombre del producto 1 es: "
+    . htmlspecialchars($Producto1) . "<br>";
+
+echo "El precio del producto 1 es: $"
+    . number_format($Precio1, 2, ',', '.') . "<br><br>";
+
+echo "El nombre del producto 2 es: "
+    . htmlspecialchars($Producto2) . "<br>";
+
+echo "El precio del producto 2 es: $"
+    . number_format($Precio2, 2, ',', '.') . "<br><br>";
+
+echo "El nombre del producto 3 es: "
+    . htmlspecialchars($Producto3) . "<br>";
+
+echo "El precio del producto 3 es: $"
+    . number_format($Precio3, 2, ',', '.') . "<br><br>";
+
+echo "<hr>";
+
+echo "La suma de los precios es: $"
+    . number_format($Suma, 2, ',', '.') . "<br>";
+
+echo "El descuento del 16% es: $"
+    . number_format($Descuento, 2, ',', '.') . "<br>";
+
+echo "<h2>Total a pagar: $"
+    . number_format($Total, 2, ',', '.') . "</h2>";
+
+echo "<a href='index.php'>Volver al formulario</a>";
 
 ?>
-
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resultado de la compra</title>
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #eeeeee;
-            padding: 30px;
-        }
-
-        .contenedor {
-            background-color: white;
-            max-width: 500px;
-            margin: auto;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 0 10px #bbbbbb;
-        }
-
-        h1 {
-            color: #2457a7;
-            text-align: center;
-        }
-
-        .total {
-            color: #168044;
-            font-size: 24px;
-            font-weight: bold;
-        }
-
-        .dato {
-            padding: 10px;
-            background-color: #f3f6fa;
-            margin-bottom: 10px;
-            border-radius: 5px;
-        }
-
-        a {
-            display: inline-block;
-            margin-top: 15px;
-            color: #2457a7;
-        }
-    </style>
-</head>
-
-<body>
-
-<div class="contenedor">
-
-    <h1>Resultado de la compra</h1>
-
-    <div class="dato">
-        <strong>Producto 1:</strong>
-        <?= seguro($producto1) ?><br>
-        <strong>Precio:</strong>
-        <?= pesos($precio1) ?>
-    </div>
-
-    <div class="dato">
-        <strong>Producto 2:</strong>
-        <?= seguro($producto2) ?><br>
-        <strong>Precio:</strong>
-        <?= pesos($precio2) ?>
-    </div>
-
-    <div class="dato">
-        <strong>Producto 3:</strong>
-        <?= seguro($producto3) ?><br>
-        <strong>Precio:</strong>
-        <?= pesos($precio3) ?>
-    </div>
-
-    <hr>
-
-    <p>
-        <strong>Subtotal:</strong>
-        <?= pesos($subtotal) ?>
-    </p>
-
-    <p>
-        <strong>Descuento del 16 %:</strong>
-        <?= pesos($descuento) ?>
-    </p>
-
-    <hr>
-
-    <p class="total">
-        Total a pagar: <?= pesos($total) ?>
-    </p>
-
-    <a href="index.php">Volver al formulario</a>
-
-</div>
-
-</body>
-</html>
